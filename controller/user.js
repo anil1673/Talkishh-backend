@@ -54,31 +54,31 @@ export const fetchAllUser=async(req,res,next)=>{
     }
 }
 // // update user friends
-// export const addRemoveFriend=async(req,res,next)=>{
-//     try{
-//         const {id,friendId}=req.params;
-//         await User.findById(id).then(async(user)=>{
-//             const friend=await User.findById(friendId);
-//             if(user.friends.includes(friendId)){
-//                 user.friends=user.friends.filter((id)=>id !== friendId);
-//                 friend.friends=friend.friends.filter((id)=>id !== friendId);
+export const addRemoveFriend=async(req,res,next)=>{
+    try{
+        const {id,friendId}=req.params;
+        await User.findById(id).then(async(user)=>{
+            const friend=await User.findById(friendId);
+            if(user.friends.includes(friendId)){
+                user.friends=user.friends.filter((id)=>id !== friendId);
+                friend.friends=friend.friends.filter((id)=>id !== friendId);
 
-//             }else{
-//                 user.friends.push(friendId);
-//                 friend.friends.push(friendId);
-//             }
-//             await user.save();
-//             await friend.save();
-//             await Promise.all(user.friends.map((id)=>User.findById(id))).then((friends)=>{
-//                 const formattedFriends=friends.map(({_id,firstname,lastname,occupation,picturePath,location})=>{return {_id,firstname,lastname,occupation,picturePath,location}});
+            }else{
+                user.friends.push(friendId);
+                friend.friends.push(friendId);
+            }
+            await user.save();
+            await friend.save();
+            await Promise.all(user.friends.map((id)=>User.findById(id))).then((friends)=>{
+                const formattedFriends=friends.map(({_id,firstname,lastname,occupation,picturePath,location})=>{return {_id,firstname,lastname,occupation,picturePath,location}});
 
-//                 res.status(200).json(formattedFriends);
-//             })
-//         }).catch((error)=>{
-//             res.status(404).json({error:error.message,msg:"user not found"})
-//         })
+                res.status(200).json(formattedFriends);
+            })
+        }).catch((error)=>{
+            res.status(404).json({error:error.message,msg:"user not found"})
+        })
 
-//     }catch(error){
-//         next(error)
-//     }
-// }
+    }catch(error){
+        next(error)
+    }
+}
