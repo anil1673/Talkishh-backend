@@ -15,6 +15,14 @@ import postRouter from "./router/post.js";
 import User from "./models/user.js";
 import Post from "./models/post.js";
 import {users,posts} from "./data/index.js"
+import fileUpload from "express-fileupload";
+import cloudinary from "cloudinary";
+
+cloudinary.config({
+  cloud_name:process.env.CLOUD_NAME,
+  api_key:process.env.API_KEY,
+  api_secret:process.env.API_SECRET
+});
 
 
 // This URL.fileURLToPath function decodes the file URL to a path string and ensures that the URL control characters (/, %) are correctly appende
@@ -25,6 +33,9 @@ const app=express();
 
 
 app.use(express.json());
+app.use(fileUpload({
+    useTempFiles:true
+}))
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({policy:"cross-origin"}));
 app.use(morgan("common"));
@@ -33,6 +44,8 @@ app.use(bodyParser.urlencoded({limit:"30mb",extended:true}));
 app.use(cors());
 // app.use("/public/assets",express.static("/public/assets"))
 app.use("/public/assets",express.static(path.join(__dirname,"public/assets")));
+
+
 
 
 
@@ -52,9 +65,9 @@ const upload=multer({storage});
 
 
 // router setup
-app.use("/api/auth",authRouter);
-app.use("/api/user",userRouter);
-app.use("/api/post",postRouter);
+app.use("/auth",authRouter);
+app.use("/user",userRouter);
+app.use("/post",postRouter);
 
 
 
@@ -80,4 +93,4 @@ app.listen(5000,(req,res)=>{
 
 
 
-export {upload}
+export {upload,cloudinary}

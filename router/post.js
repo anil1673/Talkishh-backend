@@ -6,19 +6,10 @@ import multer from "multer";
 const postRouter=express.Router();
 
 
-const storage=multer.diskStorage({
-    destination:function(req,file,cb){
-        cb(null,"public/assets");
-    },
-    filename:function(req,file,cb){
-        cb(null,file.originalname);
-    }
-});
 
-const upload=multer({storage});
 
 // create post
-postRouter.post("/posts",verifyToken,upload.single("image"),createPost);
+postRouter.post("/posts",verifyToken,createPost);
 // get all post of user
 postRouter.get("/",verifyToken,getFeedPosts);
 // to get single post onwhich it ic clicked

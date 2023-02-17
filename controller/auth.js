@@ -1,17 +1,25 @@
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import cloudinary from "cloudinary"
+
+cloudinary.config({
+    cloud_name:process.env.CLOUD_NAME,
+    api_key:process.env.API_KEY,
+    api_secret:process.env.API_SECRET
+  })
 
 
   const registerController=async(req,res,next)=>{
     try{
+        console.log("********** ",)
        const {firstName,lastName,email,password,friends,location,occupation} =req.body;
-       const picturePath=req.file.filename;
+       const imgUrl=req.body.imgUrl;
     
-
        const hashPass=await bcryptjs.hash(password,10);
+      
        const newUser=new User({
-        firstName,lastName,email,password:hashPass,picturePath,friends,location,occupation,
+        firstName,lastName,email,password:hashPass,friends,location,occupation,picturePath:imgUrl,
         viewedProfile:Math.floor(Math.random() * 10000),impressions:Math.floor(Math.random() * 10000)
        });
        await newUser.save().then((user)=>{

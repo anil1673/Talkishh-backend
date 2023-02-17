@@ -1,13 +1,23 @@
 import Post from "../models/post.js";
 import User from "../models/user.js";
+import cloudinary from "cloudinary";
+
+cloudinary.config({
+  cloud_name:process.env.CLOUD_NAME,
+  api_key:process.env.API_KEY,
+  api_secret:process.env.API_SECRET
+})
 
 export const createPost = async (req, res) => {
     try {
-      const { userId, caption } = req.body;
-    
+      const { userId, caption,image } = req.body;
 
-    const image=req.file.filename;
+     
+
       const user = await User.findById(userId);
+      console.log("fdfdf", image)
+
+      
       const newPost = new Post({
         userId,
         firstName: user.firstName,
